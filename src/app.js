@@ -10,9 +10,9 @@ app.use(cors());
 
 const repositories = [];
 
-function checkIdExist(id){
-	const  repositoryIndex	= repositories.findIndex(repository => repository.id == id) 
-	return repositoryIndex === -1 ? -1 : repositoryIndex 
+function checkIdExist(id) {
+	const repositoryIndex = repositories.findIndex(repository => repository.id == id)
+	return repositoryIndex === -1 ? -1 : repositoryIndex
 }
 
 app.get("/repositories", (request, response) => {
@@ -20,16 +20,16 @@ app.get("/repositories", (request, response) => {
 });
 
 app.post("/repositories", (request, response) => {
-  const { title, url, techs } = request.body
-  const repository = {
+	const { title, url, techs } = request.body
+	const repository = {
 		id: uuid(),
-    title,
-    url,
-    techs,
-    likes: 0,
-  }
-  repositories.push(repository)
-  return response.json(repository)
+		title,
+		url,
+		techs,
+		likes: 0,
+	}
+	repositories.push(repository)
+	return response.json(repository)
 });
 
 app.put("/repositories/:id", (request, response) => {
@@ -37,8 +37,8 @@ app.put("/repositories/:id", (request, response) => {
 	repositoryIndex = checkIdExist(id)
 
 	if (repositoryIndex === -1)
-		return response.status(400).json('Repository does not exist') 
-	
+		return response.status(400).json('Repository does not exist')
+
 	const { title, url, techs } = request.body
 	const repository = {
 		id,
@@ -49,16 +49,16 @@ app.put("/repositories/:id", (request, response) => {
 	}
 
 	repositories[repositoryIndex] = repository
-	return response.json(repository)	
+	return response.json(repository)
 });
 
 app.delete("/repositories/:id", (request, response) => {
 	const { id } = request.params
 	repositoryIndex = checkIdExist(id)
-	
+
 	if (repositoryIndex === -1)
-		return response.status(400).json('Repository does not exist') 
-	
+		return response.status(400).json('Repository does not exist')
+
 	repositories.splice(repositoryIndex, 1)
 
 	return response.status(204).json()
@@ -68,19 +68,19 @@ app.post("/repositories/:id/like", (request, response) => {
 	const { id } = request.params
 	repositoryIndex = checkIdExist(id)
 	if (repositoryIndex === -1)
-		return response.status(400).json('Repository does not exist') 
-	
-	like = repositories[repositoryIndex].likes+=1
+		return response.status(400).json('Repository does not exist')
+
+	like = repositories[repositoryIndex].likes += 1
 
 	const repository = {
 		id,
 		title: repositories[repositoryIndex].title,
-		url:repositories[repositoryIndex].url,
+		url: repositories[repositoryIndex].url,
 		techs: repositories[repositoryIndex].techs,
 		likes: like
 	}
-	
-	repositories[repositoryIndex] = repository	
+
+	repositories[repositoryIndex] = repository
 
 	return response.json(repository)
 });
